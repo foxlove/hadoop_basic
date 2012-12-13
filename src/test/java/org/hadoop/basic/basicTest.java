@@ -19,7 +19,7 @@ public class basicTest
         try
         {
 
-            String[] args = { "/usr/local/hadoop-1.0.4/conf/hadoop-env.sh", "output-wordcount/" };
+            String[] args = { "/usr/local/hadoop-0.20.1/conf/hadoop-env.sh", "output-wordcount/" };
 
             Utils.removeDIR( "/root/workspace/hadoop_basic/" + args[1] );
 
@@ -55,7 +55,7 @@ public class basicTest
         try
         {
             String[] args = {
-                "/usr/local/hadoop-1.0.4/build.xml",
+                "/usr/local/hadoop-0.20.1/build.xml",
                 "hdfs://192.168.140.128:9000/user/root/output/copy_build.xml" };
             
             String[] output = {"hdfs://192.168.140.128:9000/user/root/output/"};
@@ -63,7 +63,7 @@ public class basicTest
             FileCopyWithProgress.main( args );
 
             logger.debug( "========  shell command ============ " );
-            callShellCommand( "/usr/local/hadoop-1.0.4/bin/hadoop fs -ls output/", true );
+            //callShellCommand( "/usr/local/hadoop-0.20.1/bin/hadoop fs -ls output/", true );
             
             logger.debug( "======== List FileStatus ============ " );
             FileListStatus.main( output);

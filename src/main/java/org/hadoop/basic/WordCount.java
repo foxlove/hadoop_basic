@@ -19,7 +19,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 /**
  * if(args[1] == "hdfs://192.168.140.128:9000/user/root/output/wordcount") result location -> HDFS
  * director => org.apache.hadoop.mapred.FileAlreadyExistsException: $HADOOP_HOME]hadoop dfs -rmr
- * (arg1) ex) /usr/local/hadoop-1.0.4/bin/hadoop dfs -rmr output/wordcount if(args[1] ==
+ * (arg1) ex) /usr/local/hadoop-0.20.1/bin/hadoop dfs -rmr output/wordcount if(args[1] ==
  * "output/wordcount") : result location -> eclipse workspace =>
  * /root/workspace/hadoop_basic/output/wordcount/...
  * 
