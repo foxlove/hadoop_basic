@@ -15,6 +15,7 @@ public class SampleTest
         {
             String[] args = { "/root/workspace/hadoop_basic/input2/putTest.txt", "output2/", "PutFile.txt" };
 
+            // if file exist then delete
             Utils.removeDIR( "/root/workspace/hadoop_basic/output2" );
 
             int res = ToolRunner.run( new PutFile(), args );
