@@ -15,7 +15,7 @@ public class MaxTemperatureMapperTest
     public void processValidRecord()
         throws IOException
     {
-    	// test
+    	// test 111
     	
         MaxTemperatureMapper mapper = new MaxTemperatureMapper();
 
