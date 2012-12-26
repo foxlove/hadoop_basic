@@ -23,10 +23,10 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class basicTest {
+public class WordCountTest {
 
 	private final static Logger logger = LoggerFactory
-			.getLogger(basicTest.class);
+			.getLogger(WordCountTest.class);
 
 	private Hadoop hadoop;
 
@@ -153,8 +153,23 @@ public class basicTest {
 		HDFS_list();
 	}
 
-	//===============================
-	
+	@Test
+	public void wordCount() {
+		try {
+
+			String[] args = { "/usr/local/hadoop-0.20.1/conf/hadoop-env.sh",
+					"output-wordcount/" };
+
+			Utils.removeDIR("/root/workspace/hadoop_basic/" + args[1]);
+
+			WordCount.main(args);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+
 	@Test
 	public void readFile() {
 		try {
