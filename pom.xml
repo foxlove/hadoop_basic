@@ -6,12 +6,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>hadoop-basic</name>
 	<description>hadoop-basic</description>
-	<repositories>
-		<repository>
-			<id>seller</id>
-			<url>http://175.126.33.202:8600/nexus/content/groups/public/</url>
-		</repository>
-	</repositories>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<outputDirectory>target/classes</outputDirectory>
