@@ -29,17 +29,25 @@ public class WordCountTest {
 			.getLogger(WordCountTest.class);
 
 	private Hadoop hadoop;
-
+	private FSFactory fsFactory;
+	
 	@Before
 	public void setup() {
 		// for HDFS call
 		hadoop = new Hadoop();
+		try {
+			fsFactory = new FSFactory();
+		} catch (IOException e) {
+			logger.error(" ####################FSFactory create instance FAIL !!!");
+			e.printStackTrace();
+			Assert.fail();
+		}
 	}
 	
 	@Test
 	public void HDFS_getHomeDir() {
 		try {
-			JSONObject jsObj = hadoop.getHomeDir(FSFactory.getInstance());
+			JSONObject jsObj = hadoop.getHomeDir(fsFactory.getInstance());
 			logger.debug("jsonObj : {}", jsObj.toJSONString());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -53,7 +61,7 @@ public class WordCountTest {
 		Path path = new Path("/user/root/mkDirTest");
 
 		try {
-			JSONObject jsObj = hadoop.makeDir(FSFactory.getInstance(), path);
+			JSONObject jsObj = hadoop.makeDir(fsFactory.getInstance(), path);
 			logger.debug("jsonObj : {}", jsObj.toJSONString());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -67,7 +75,7 @@ public class WordCountTest {
 		Path path = new Path("/user/root/mkDirTest");
 
 		try {
-			JSONObject jsObj = hadoop.delete(FSFactory.getInstance(), path,
+			JSONObject jsObj = hadoop.delete(fsFactory.getInstance(), path,
 					true);
 			logger.debug("jsonObj : {}", jsObj.toJSONString());
 		} catch (IOException e) {
@@ -84,7 +92,7 @@ public class WordCountTest {
 		JSONArray jsArray = null;
 
 		try {
-			jsArray = hadoop.list(FSFactory.getInstance(), path,
+			jsArray = hadoop.list(fsFactory.getInstance(), path,
 					ServerInfo.HDFS_BASE_URL);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -125,7 +133,7 @@ public class WordCountTest {
 		}
 
 		try {
-			JSONObject jsObj = hadoop.put(FSFactory.getInstance(), path, is,
+			JSONObject jsObj = hadoop.put(fsFactory.getInstance(), path, is,
 					true, 1024);
 			logger.debug("jsonObj : {}", jsObj.toJSONString());
 		} catch (IOException e) {
@@ -142,7 +150,7 @@ public class WordCountTest {
 		Path path = new Path("/user/root/output/chiwoo-codestyle.xml");
 
 		try {
-			JSONObject jsObj = hadoop.delete(FSFactory.getInstance(), path,
+			JSONObject jsObj = hadoop.delete(fsFactory.getInstance(), path,
 					true);
 			logger.debug("jsonObj : {}", jsObj.toJSONString());
 		} catch (IOException e) {

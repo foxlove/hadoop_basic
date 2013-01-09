@@ -8,18 +8,22 @@ import org.apache.hadoop.fs.FileSystem;
 
 public class FSFactory {
 
-	public static FileSystem getInstance() throws IOException {
-		return FileSystem.get(URI.create(ServerInfo.HDFS_BASE_URL),
-				new Configuration());
+	private static FileSystem FS = null;
+	private static Configuration conf = new Configuration();
+
+	public FSFactory() throws IOException {
+		FS = FileSystem.get(URI.create(ServerInfo.HDFS_BASE_URL), conf);
 	}
 
-	public static FileSystem getInstance(URI uri, Configuration conf)
-			throws IOException {
-		return FileSystem.get(uri, conf);
+	public FSFactory(URI uri, Configuration conf) throws IOException {
+		FS = FileSystem.get(uri, conf);
 	}
 
-	public static FileSystem getInstance(Configuration conf) throws IOException {
-		return FileSystem.get(conf);
+	public FSFactory(Configuration conf) throws IOException {
+		FS = FileSystem.get(conf);
 	}
 
+	public FileSystem getInstance() throws IOException {
+		return FS;
+	}
 }

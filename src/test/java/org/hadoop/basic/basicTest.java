@@ -1,10 +1,13 @@
 package org.hadoop.basic;
 
 import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -15,9 +18,9 @@ import org.apache.hadoop.io.IOUtils;
 import org.hadoop.util.FSFactory;
 import org.hadoop.util.Hadoop;
 import org.hadoop.util.ServerInfo;
-import org.hadoop.util.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -29,17 +32,31 @@ public class basicTest {
 			.getLogger(basicTest.class);
 
 	private Hadoop hadoop;
+	private FSFactory fsFactory;
 
 	@Before
 	public void setup() {
 		// for HDFS call
 		hadoop = new Hadoop();
+		try {
+			fsFactory = new FSFactory();
+		} catch (IOException e) {
+			logger.error(" ####################FSFactory create instance FAIL !!!");
+			e.printStackTrace();
+			Assert.fail();
+		}
 	}
 	
+	@After
+	public void tearDown(){
+		hadoop = null;
+		fsFactory = null;
+	}
+
 	@Test
 	public void HDFS_getHomeDir() {
 		try {
-			JSONObject jsObj = hadoop.getHomeDir(FSFactory.getInstance());
+			JSONObject jsObj = hadoop.getHomeDir(fsFactory.getInstance());
 			logger.debug("jsonObj : {}", jsObj.toJSONString());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -53,7 +70,7 @@ public class basicTest {
 		Path path = new Path("/user/root/mkDirTest");
 
 		try {
-			JSONObject jsObj = hadoop.makeDir(FSFactory.getInstance(), path);
+			JSONObject jsObj = hadoop.makeDir(fsFactory.getInstance(), path);
 			logger.debug("jsonObj : {}", jsObj.toJSONString());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -67,7 +84,7 @@ public class basicTest {
 		Path path = new Path("/user/root/mkDirTest");
 
 		try {
-			JSONObject jsObj = hadoop.delete(FSFactory.getInstance(), path,
+			JSONObject jsObj = hadoop.delete(fsFactory.getInstance(), path,
 					true);
 			logger.debug("jsonObj : {}", jsObj.toJSONString());
 		} catch (IOException e) {
@@ -84,7 +101,7 @@ public class basicTest {
 		JSONArray jsArray = null;
 
 		try {
-			jsArray = hadoop.list(FSFactory.getInstance(), path,
+			jsArray = hadoop.list(fsFactory.getInstance(), path,
 					ServerInfo.HDFS_BASE_URL);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -125,7 +142,7 @@ public class basicTest {
 		}
 
 		try {
-			JSONObject jsObj = hadoop.put(FSFactory.getInstance(), path, is,
+			JSONObject jsObj = hadoop.put(fsFactory.getInstance(), path, is,
 					true, 1024);
 			logger.debug("jsonObj : {}", jsObj.toJSONString());
 		} catch (IOException e) {
@@ -137,12 +154,58 @@ public class basicTest {
 	}
 
 	@Test
+	public void HDFS_get() {
+		Path path = new Path(ServerInfo.HDFS_BASE_URL
+				+ "/user/root/output/movie.mp4");
+		try {
+			DataInputStream fsdis = hadoop.get(fsFactory.getInstance(), path);
+			logger.debug(">> size : {} MB", fsdis.available() / (1024L * 1024L));
+			
+			OutputStream baos = new FileOutputStream("/root/Desktop/hadoop_copy_mv.mp4");
+			
+			byte[] buf = new byte[1024];
+			int readCnt = 0;
+			
+			while((readCnt = fsdis.read(buf)) != -1){
+				baos.write(buf, 0, readCnt);
+			}
+			baos.flush();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+	
+	@Test
+	public void general_file_read(){
+		try {
+			InputStream fis = new FileInputStream("/root/Desktop/movie.mp4");
+			logger.debug(">> size : {} MB", fis.available() / (1024L * 1024L));
+			
+			OutputStream baos = new FileOutputStream("/root/Desktop/general_copy_mv.mp4");
+			
+			byte[] buf = new byte[1024];
+			int readCnt = 0;
+			
+			while((readCnt = fis.read(buf)) != -1){
+				baos.write(buf, 0, readCnt);
+			}
+			baos.flush();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+
+	@Test
 	public void HDFS_delFile() {
 
 		Path path = new Path("/user/root/output/chiwoo-codestyle.xml");
 
 		try {
-			JSONObject jsObj = hadoop.delete(FSFactory.getInstance(), path,
+			JSONObject jsObj = hadoop.delete(fsFactory.getInstance(), path,
 					true);
 			logger.debug("jsonObj : {}", jsObj.toJSONString());
 		} catch (IOException e) {
@@ -153,8 +216,8 @@ public class basicTest {
 		HDFS_list();
 	}
 
-	//===============================
-	
+	// ===============================
+
 	@Test
 	public void readFile() {
 		try {

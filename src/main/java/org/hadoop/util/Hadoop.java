@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -69,5 +70,10 @@ public class Hadoop {
 		IOUtils.copyBytes(in, os, bufferSize, true);
 		json.put("result", true);
 		return json;
+	}
+	
+	public FSDataInputStream get(FileSystem fs, Path path)
+			throws IOException {
+		return fs.open(path);
 	}
 }
